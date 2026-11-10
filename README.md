@@ -60,7 +60,7 @@
 
 <br/><br/>
 
-<img src="https://count.getloli.com/@liathy?name=liathy&theme=moebooru&padding=7&darkmode=auto" alt="visitor count"/>
+<img src="https://count.getloli.com/@liathy?name=liathy&theme=moebooru&padding=7&darkmode=0" alt="visitor count"/>
 
 <sub>✧ thanks for visiting, sweet dreams ☾ ✧</sub>
 
