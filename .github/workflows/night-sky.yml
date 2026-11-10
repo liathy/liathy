@@ -46,12 +46,3 @@ jobs:
           commit_message: "chore: redraw the night sky ✧"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # GitHub's image proxy (camo) caches README images; purge it so new cards show.
-      # Wait out raw.githubusercontent's 5 min cache first so camo refetches the new files.
-      - name: refresh GitHub's image cache
-        run: |
-          sleep 300
-          curl -s "https://github.com/${{ github.repository_owner }}" \
-            | grep -o 'https://camo.githubusercontent.com/[^"]*' | sort -u \
-            | xargs -r -n1 curl -s -X PURGE -o /dev/null -w "%{http_code} purged\n"
