@@ -30,7 +30,7 @@
 
 <div align="center">
   <a href="https://github.com/liathy/MusiKPL"><img src="https://raw.githubusercontent.com/liathy/liathy/output/project.svg" width="49%" alt="MusiKPL"/></a>
-  <a href="https://www.last.fm/user/deathirs"><img src="https://raw.githubusercontent.com/liathy/liathy/output/nowplaying.svg" width="49%" alt="what i'm listening to on Last.fm"/></a>
+  <a href="https://www.last.fm/user/deathirs"><img src="https://liathy-nowplaying.liathy.workers.dev/nowplaying.svg" width="49%" alt="what i'm listening to on Last.fm"/></a>
 </div>
 
 ## ✧ stardust stats

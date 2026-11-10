@@ -1,83 +1,15 @@
-// Draws the live profile cards (stats, languages, activity, tech stack,
-// featured project, Last.fm now playing) as animated night-sky SVGs in dist/.
+// Draws the profile cards (stats, languages, activity, tech stack, featured project)
+// as animated night-sky SVGs in dist/. The Last.fm card is drawn live by worker/.
 // Runs in GitHub Actions; needs only Node 20+ (no dependencies).
 import { mkdir, writeFile } from 'node:fs/promises';
+import { C, PALETTE, FONT, esc, trunc, num, sparkle, BASE_STYLE, card } from './theme.mjs';
 
 const GH_USER = process.env.GH_USER || 'liathy';
 const FEATURED = process.env.FEATURED_REPO || 'MusiKPL';
-const LASTFM_USER = process.env.LASTFM_USER || 'deathirs';
 const TOKEN = process.env.GITHUB_TOKEN;
-const LASTFM_KEY = process.env.LASTFM_API_KEY;
 const STACK = (process.env.STACK || 'rust,js,ts,angular,tailwind,flutter').split(',');
 const STACK_LABELS = { rust: 'Rust', js: 'JavaScript', ts: 'TypeScript', angular: 'Angular', tailwind: 'Tailwind', flutter: 'Flutter' };
 const OUT = 'dist';
-
-const C = {
-  bg1: '#130f27', bg2: '#251c4e', border: '#3d3374', text: '#F3EEFF', muted: '#A99BC9',
-  lilac: '#C9A7EB', sky: '#9ED2F6', pink: '#F5B8DA',
-};
-const PALETTE = ['#C9A7EB', '#9ED2F6', '#F5B8DA', '#B8F2E6', '#FFE5A5', '#A0A6F5'];
-const FONT = `'Segoe UI', Ubuntu, 'Helvetica Neue', Arial, sans-serif`;
-
-// ---------- helpers ----------
-const esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-const trunc = (s, n) => (s = String(s ?? ''), s.length > n ? s.slice(0, n - 1).trimEnd() + '…' : s);
-const num = n => (n >= 10000 ? new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 }).format(n) : n.toLocaleString('en-US'));
-
-function rng(seed) { // mulberry32, so stars stay put between runs
-  return () => {
-    seed |= 0; seed = (seed + 0x6d2b79f5) | 0;
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-function stars(w, h, count, seed) {
-  const r = rng(seed);
-  let out = '';
-  for (let i = 0; i < count; i++) {
-    const x = (r() * w).toFixed(1), y = (r() * h).toFixed(1), rad = (0.6 + r() * 1.1).toFixed(2);
-    out += `<circle class="tw" cx="${x}" cy="${y}" r="${rad}" style="animation-delay:${(r() * 3).toFixed(2)}s;animation-duration:${(2.2 + r() * 2.5).toFixed(2)}s"/>`;
-  }
-  return out;
-}
-
-const sparkle = (x, y, s, fill, delay = 0) =>
-  `<path class="spk" fill="${fill}" style="animation-delay:${delay}s" d="M${x} ${y - s} L${x + s * 0.28} ${y - s * 0.28} L${x + s} ${y} L${x + s * 0.28} ${y + s * 0.28} L${x} ${y + s} L${x - s * 0.28} ${y + s * 0.28} L${x - s} ${y} L${x - s * 0.28} ${y - s * 0.28}Z"/>`;
-
-const BASE_STYLE = `
-  .tw{fill:#fff;animation:tw 3s ease-in-out infinite}
-  @keyframes tw{0%,100%{opacity:.12}50%{opacity:.9}}
-  .spk{transform-box:fill-box;transform-origin:center;animation:spk 3.5s ease-in-out infinite}
-  @keyframes spk{0%,100%{opacity:.3;transform:scale(.6) rotate(0)}50%{opacity:1;transform:scale(1) rotate(45deg)}}
-  .title{font:700 17px ${FONT};fill:${C.lilac}}
-  .lbl{font:500 13.5px ${FONT};fill:${C.muted}}
-  .val{font:700 14px ${FONT};fill:${C.text}}
-  .small{font:500 12px ${FONT};fill:${C.muted}}
-  .in{animation:in .7s ease-out both}
-  @keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-`;
-
-function card({ w, h, title, body, defs = '', style = '', seed = 1, label }) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" role="img" aria-label="${esc(label || title)}">
-<defs>
-  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${C.bg1}"/><stop offset="1" stop-color="${C.bg2}"/></linearGradient>
-  <linearGradient id="ls" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${C.lilac}"/><stop offset="1" stop-color="${C.sky}"/></linearGradient>
-  <clipPath id="cardclip"><rect x=".5" y=".5" width="${w - 1}" height="${h - 1}" rx="18"/></clipPath>
-  ${defs}
-</defs>
-<style>${BASE_STYLE}${style}</style>
-<g clip-path="url(#cardclip)">
-  <rect width="${w}" height="${h}" fill="url(#bg)"/>
-  ${stars(w, h, Math.round((w * h) / 4500), seed)}
-</g>
-<rect x=".5" y=".5" width="${w - 1}" height="${h - 1}" rx="18" fill="none" stroke="${C.border}"/>
-${title ? `<text class="title" x="25" y="38">${esc(title)}</text>` : ''}
-${body}
-</svg>
-`;
-}
 
 async function getJSON(url, opts = {}) {
   const res = await fetch(url, opts);
@@ -294,68 +226,6 @@ ${items}${spk}
 `;
 }
 
-// ---------- Last.fm ----------
-function ago(uts) {
-  const s = Math.max(0, Date.now() / 1000 - uts);
-  if (s < 3600) return `${Math.max(1, Math.round(s / 60))} min ago`;
-  if (s < 86400) { const hrs = Math.round(s / 3600); return `${hrs} hour${hrs > 1 ? 's' : ''} ago`; }
-  const dys = Math.round(s / 86400); return `${dys} day${dys > 1 ? 's' : ''} ago`;
-}
-
-async function lastfmCard() {
-  let track = null, playing = false, plays = null, art = null;
-  if (LASTFM_KEY) {
-    const base = `https://ws.audioscrobbler.com/2.0/?api_key=${LASTFM_KEY}&user=${encodeURIComponent(LASTFM_USER)}&format=json`;
-    const [recent, info] = await Promise.all([
-      getJSON(`${base}&method=user.getrecenttracks&limit=1`),
-      getJSON(`${base}&method=user.getinfo`).catch(() => null),
-    ]);
-    track = [].concat(recent?.recenttracks?.track || [])[0] || null;
-    playing = track?.['@attr']?.nowplaying === 'true';
-    plays = info?.user?.playcount ? Number(info.user.playcount) : null;
-    const img = track?.image?.find(i => i.size === 'extralarge')?.['#text'] || track?.image?.at(-1)?.['#text'];
-    if (img && !img.includes('2a96cbd8b46e442fc41c2b86b821562f')) art = await dataURI(img).catch(() => null);
-  }
-  const cx = 88, cy = 90;
-  const center = art
-    ? `<image href="${art}" x="${cx - 27}" y="${cy - 27}" width="54" height="54" clip-path="url(#art)" preserveAspectRatio="xMidYMid slice"/>`
-    : `<circle cx="${cx}" cy="${cy}" r="27" fill="url(#ls)"/><text x="${cx}" y="${cy + 6}" text-anchor="middle" style="font:700 18px ${FONT};fill:${C.bg1}">♪</text>`;
-  const vinyl = `
-  <g class="${playing ? 'spin' : ''}">
-    <circle cx="${cx}" cy="${cy}" r="60" fill="#0b0918" stroke="${C.border}"/>
-    <circle cx="${cx}" cy="${cy}" r="52" fill="none" stroke="#2a2350"/>
-    <circle cx="${cx}" cy="${cy}" r="45" fill="none" stroke="#231d45"/>
-    <circle cx="${cx}" cy="${cy}" r="38" fill="none" stroke="#2a2350"/>
-    <path d="M${cx - 44} ${cy - 22} A50 50 0 0 1 ${cx - 14} ${cy - 47}" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="3" stroke-linecap="round"/>
-    ${center}
-    <circle cx="${cx}" cy="${cy}" r="3" fill="${C.bg1}"/>
-  </g>`;
-  const eq = playing ? [0, 1, 2, 3].map(i =>
-    `<rect class="eq" x="${440 + i * 8}" y="22" width="5" height="18" rx="2.5" fill="${i % 2 ? C.sky : C.lilac}" style="animation-delay:${[0, .35, .15, .5][i]}s;animation-duration:${[.9, 1.1, .8, 1][i]}s"/>`).join('') : '';
-  let text;
-  if (track) {
-    const when = playing ? '♪ now playing' : `☾ last played · ${track.date?.uts ? ago(Number(track.date.uts)) : 'recently'}`;
-    text = `
-  <text class="small in" x="170" y="40" style="fill:${playing ? C.sky : C.muted};font-weight:600">${esc(when)}</text>
-  <text class="in" x="170" y="72" style="font:700 19px ${FONT};fill:${C.text};animation-delay:.1s">${esc(trunc(track.name, 28))}</text>
-  <text class="in" x="170" y="96" style="font:600 14.5px ${FONT};fill:${C.lilac};animation-delay:.2s">${esc(trunc(track.artist?.['#text'] || track.artist?.name, 34))}</text>
-  ${track.album?.['#text'] ? `<text class="small in" x="170" y="117" style="animation-delay:.3s">${esc(trunc(track.album['#text'], 42))}</text>` : ''}`;
-  } else {
-    text = `
-  <text class="small" x="170" y="40" style="fill:${C.muted};font-weight:600">☾ on my headphones</text>
-  <text x="170" y="74" style="font:700 18px ${FONT};fill:${C.text}">the stars are quiet right now</text>
-  <text class="small" x="170" y="98">come back in a little while ♪</text>`;
-  }
-  const footer = plays != null ? `<text class="small" x="170" y="156">✧ ${num(plays)} scrobbles on last.fm</text>` : '';
-  return card({
-    w: 495, h: 180, title: '', seed: 55, label: track ? `${playing ? 'Now playing' : 'Last played'}: ${track.name}` : 'Last.fm',
-    defs: `<clipPath id="art"><circle cx="${cx}" cy="${cy}" r="27"/></clipPath>`,
-    style: `.spin{transform-origin:${cx}px ${cy}px;animation:spin 5s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
-      .eq{transform-box:fill-box;transform-origin:bottom;animation:eq 1s ease-in-out infinite alternate}@keyframes eq{0%{transform:scaleY(.25)}100%{transform:scaleY(1)}}`,
-    body: vinyl + eq + text + footer + sparkle(470, 150, 5, C.pink, 1),
-  });
-}
-
 // ---------- main ----------
 await mkdir(OUT, { recursive: true });
 const jobs = [];
@@ -371,5 +241,4 @@ if (TOKEN) {
   if (u.featured) attempt('project.svg', async () => projectCard(u.featured));
 } else console.warn('GITHUB_TOKEN not set, skipping GitHub cards');
 attempt('stack.svg', techCard);
-attempt('nowplaying.svg', lastfmCard);
 await Promise.all(jobs);
