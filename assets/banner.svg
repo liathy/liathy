@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" width="1200" height="300" role="img" aria-label="Annie ✧ liathy">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0f0c24"/>
+      <stop offset=".55" stop-color="#241c4d"/>
+      <stop offset="1" stop-color="#4a3d7f"/>
+    </linearGradient>
+    <linearGradient id="name" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#E6D3F7"/>
+      <stop offset=".5" stop-color="#AED6F1"/>
+      <stop offset="1" stop-color="#D7BDE2"/>
+      <animateTransform attributeName="gradientTransform" type="translate" values="-1 0;1 0;-1 0" dur="8s" repeatCount="indefinite"/>
+    </linearGradient>
+    <linearGradient id="wave1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#D7BDE2"/>
+      <stop offset="1" stop-color="#AED6F1"/>
+    </linearGradient>
+    <linearGradient id="wave2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#AED6F1"/>
+      <stop offset="1" stop-color="#C9A7EB"/>
+    </linearGradient>
+    <radialGradient id="glow">
+      <stop offset="0" stop-color="#FFF8E7" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#FFF8E7" stop-opacity="0"/>
+    </radialGradient>
+    <mask id="crescent">
+      <circle cx="1060" cy="70" r="30" fill="#fff"/>
+      <circle cx="1074" cy="60" r="26" fill="#000"/>
+    </mask>
+    <clipPath id="round"><rect width="1200" height="300" rx="26"/></clipPath>
+    <linearGradient id="trail" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <style>
+    .s{fill:#fff;animation:tw 3s ease-in-out infinite}
+    .sp{fill:#E6D3F7;animation:tw 4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+    @keyframes tw{0%,100%{opacity:.15}50%{opacity:1}}
+    .name{font:700 92px 'Segoe UI Rounded','Nunito','Quicksand','Segoe UI',Ubuntu,'Helvetica Neue',sans-serif;letter-spacing:4px}
+    .sub{font:500 22px 'Segoe UI',Ubuntu,'Helvetica Neue',sans-serif;letter-spacing:6px;fill:#CFE3F5}
+    .float{animation:fl 6s ease-in-out infinite}
+    @keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+    .w1{animation:wv 9s linear infinite}
+    .w2{animation:wv 14s linear infinite reverse}
+    @keyframes wv{from{transform:translateX(0)}to{transform:translateX(-600px)}}
+    .shoot{animation:sh 7s ease-in infinite}
+    @keyframes sh{0%{transform:translate(0,0);opacity:0}4%{opacity:1}14%{transform:translate(-420px,180px);opacity:0}100%{transform:translate(-420px,180px);opacity:0}}
+    .moon{animation:fl 7s ease-in-out infinite}
+  </style>
+  <g clip-path="url(#round)">
+    <rect width="1200" height="300" fill="url(#sky)"/>
+
+    <!-- stars -->
+    <circle class="s" cx="60" cy="40" r="1.6" style="animation-delay:.2s"/>
+    <circle class="s" cx="140" cy="95" r="1.1" style="animation-delay:1.4s"/>
+    <circle class="s" cx="210" cy="30" r="1.8" style="animation-delay:.8s;animation-duration:4s"/>
+    <circle class="s" cx="300" cy="120" r="1.2" style="animation-delay:2.1s"/>
+    <circle class="s" cx="355" cy="55" r="1.5" style="animation-delay:.5s;animation-duration:2.4s"/>
+    <circle class="s" cx="430" cy="25" r="1" style="animation-delay:1.7s"/>
+    <circle class="s" cx="480" cy="150" r="1.3" style="animation-delay:2.6s;animation-duration:3.6s"/>
+    <circle class="s" cx="560" cy="35" r="1.7" style="animation-delay:.1s"/>
+    <circle class="s" cx="640" cy="160" r="1.1" style="animation-delay:1.1s"/>
+    <circle class="s" cx="700" cy="20" r="1.4" style="animation-delay:2.3s;animation-duration:2.8s"/>
+    <circle class="s" cx="780" cy="130" r="1.2" style="animation-delay:.6s"/>
+    <circle class="s" cx="830" cy="45" r="1.8" style="animation-delay:1.9s;animation-duration:4.2s"/>
+    <circle class="s" cx="910" cy="105" r="1" style="animation-delay:.3s"/>
+    <circle class="s" cx="960" cy="30" r="1.3" style="animation-delay:2.8s"/>
+    <circle class="s" cx="1000" cy="160" r="1.5" style="animation-delay:1.2s;animation-duration:3.2s"/>
+    <circle class="s" cx="1130" cy="130" r="1.2" style="animation-delay:.9s"/>
+    <circle class="s" cx="1160" cy="35" r="1.6" style="animation-delay:2s"/>
+    <circle class="s" cx="95" cy="170" r="1.2" style="animation-delay:1.6s;animation-duration:2.6s"/>
+    <circle class="s" cx="250" cy="185" r="1" style="animation-delay:.4s"/>
+    <circle class="s" cx="1080" cy="190" r="1.1" style="animation-delay:2.4s"/>
+
+    <!-- sparkles -->
+    <path class="sp" d="M180 140 l3 9 9 3 -9 3 -3 9 -3 -9 -9 -3 9 -3z" style="animation-delay:.7s"/>
+    <path class="sp" d="M880 170 l2.5 7 7 2.5 -7 2.5 -2.5 7 -2.5 -7 -7 -2.5 7 -2.5z" style="animation-delay:1.8s"/>
+    <path class="sp" d="M520 80 l2 6 6 2 -6 2 -2 6 -2 -6 -6 -2 6 -2z" style="animation-delay:2.5s"/>
+    <path class="sp" d="M1110 95 l2 6 6 2 -6 2 -2 6 -2 -6 -6 -2 6 -2z" style="animation-delay:1s"/>
+
+    <!-- shooting star -->
+    <g class="shoot">
+      <line x1="900" y1="10" x2="970" y2="-20" stroke="url(#trail)" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="900" cy="10" r="2.2" fill="#fff"/>
+    </g>
+
+    <!-- moon -->
+    <g class="moon">
+      <circle cx="1060" cy="70" r="70" fill="url(#glow)"/>
+      <rect x="1020" y="30" width="80" height="80" fill="#FFF4D6" mask="url(#crescent)"/>
+    </g>
+
+    <!-- name -->
+    <g class="float">
+      <text class="name" x="600" y="148" text-anchor="middle" fill="url(#name)">Annie</text>
+      <text class="sub" x="600" y="186" text-anchor="middle">✧ liathy ✧</text>
+    </g>
+
+    <!-- waves -->
+    <g class="w2" opacity=".55">
+      <path fill="url(#wave2)" d="M0 238 Q150 212 300 238 T600 238 T900 238 T1200 238 T1500 238 T1800 238 V300 H0Z"/>
+    </g>
+    <g class="w1" opacity=".9">
+      <path fill="url(#wave1)" d="M0 256 Q150 284 300 256 T600 256 T900 256 T1200 256 T1500 256 T1800 256 V300 H0Z"/>
+    </g>
+  </g>
+</svg>

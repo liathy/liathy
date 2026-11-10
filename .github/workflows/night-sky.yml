@@ -1,0 +1,48 @@
+name: night sky
+
+on:
+  schedule:
+    - cron: "*/30 * * * *" # redraw now playing + stats every 30 min
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: night-sky
+  cancel-in-progress: true
+
+jobs:
+  draw:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: draw cards
+        run: node scripts/generate.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
+          GH_USER: ${{ github.repository_owner }}
+          LASTFM_USER: deathirs
+          FEATURED_REPO: MusiKPL
+
+      - name: draw contribution snake
+        uses: Platane/snk@v3
+        with:
+          github_user_name: ${{ github.repository_owner }}
+          outputs: |
+            dist/snake-dark.svg?color_snake=#9ED2F6&color_dots=#221c42,#3f3470,#6c58a8,#a98bdc,#dcc9f7
+            dist/snake-light.svg?color_snake=#6FB6E8&color_dots=#efeaf8,#dccff0,#c3abe6,#a587d6,#8466c4
+
+      - name: publish to the output branch
+        uses: crazy-max/ghaction-github-pages@v4
+        with:
+          target_branch: output
+          build_dir: dist
+          commit_message: "chore: redraw the night sky ✧"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
