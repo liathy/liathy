@@ -1,7 +1,7 @@
 // Draws the profile cards (stats, languages, activity, tech stack, featured project)
 // as animated YoRHa-monochrome SVGs in dist/. The Last.fm card is drawn live by worker/.
 // Runs in GitHub Actions; needs only Node 20+ (no dependencies).
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { C, FILLS, FONT, esc, trunc, num, diamond, frame, particles, BASE_STYLE, card } from './theme.mjs';
 
 const GH_USER = process.env.GH_USER || 'liathy';
@@ -17,13 +17,6 @@ async function getJSON(url, opts = {}) {
   const res = await fetch(url, opts);
   if (!res.ok) throw new Error(`${res.status} ${res.statusText} for ${url.split('?')[0]}`);
   return res.json();
-}
-
-async function dataURI(url) {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`${res.status} for image`);
-  const type = (res.headers.get('content-type') || 'image/png').split(';')[0];
-  return `data:${type};base64,${Buffer.from(await res.arrayBuffer()).toString('base64')}`;
 }
 
 // ---------- GitHub ----------
@@ -225,12 +218,15 @@ function projectCard(repo) {
 // ---------- tech stack ----------
 async function techCard() {
   const size = 64, gap = 40, w = STACK.length * size + (STACK.length - 1) * gap + 40, h = 124;
+  // icons are vendored in assets/icons (Simple Icons, CC0): the CDN refuses requests from Actions runners
   const icons = await Promise.all(STACK.map(id =>
-    dataURI(`https://cdn.simpleicons.org/${STACK_ICONS[id] || id}/F2F2F2`).catch(() => null)));
+    readFile(`assets/icons/${STACK_ICONS[id] || id}.svg`, 'utf8')
+      .then(svg => [...svg.matchAll(/<path[^>]*\sd="([^"]+)"/g)].map(m => m[1]))
+      .catch(e => { console.error(`✗ icon ${id}:`, e.message); process.exitCode = 1; return null; })));
   const items = STACK.map((id, i) => {
     const x = 20 + i * (size + gap);
-    const inner = icons[i]
-      ? `<image href="${icons[i]}" x="${x + 16}" y="${22}" width="${size - 32}" height="${size - 32}"/>`
+    const inner = icons[i]?.length
+      ? `<g transform="translate(${x + 16} 22) scale(${(size - 32) / 24})" fill="${C.text}">${icons[i].map(d => `<path d="${d}"/>`).join('')}</g>`
       : `<text x="${x + size / 2}" y="${44}" text-anchor="middle" class="lbl" style="fill:${C.text}">${esc(id)}</text>`;
     return `<g class="bob" style="animation-delay:${(i * 0.3).toFixed(1)}s">
       <rect x="${x}" y="6" width="${size}" height="${size}" fill="${C.bg}"/>
