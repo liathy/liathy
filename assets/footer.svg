@@ -1,34 +1,40 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 90" width="1200" height="90" aria-hidden="true">
-  <defs>
-    <linearGradient id="a" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#AED6F1"/>
-      <stop offset="1" stop-color="#D7BDE2"/>
-    </linearGradient>
-    <linearGradient id="b" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#4a3d7f"/>
-      <stop offset="1" stop-color="#141029"/>
-    </linearGradient>
-    <clipPath id="r"><rect width="1200" height="90" rx="22"/></clipPath>
-  </defs>
-  <style>
-    .w1{animation:wv 10s linear infinite}
-    .w2{animation:wv 15s linear infinite reverse}
-    @keyframes wv{from{transform:translateX(0)}to{transform:translateX(-600px)}}
-    .s{fill:#fff;animation:tw 3s ease-in-out infinite}
-    @keyframes tw{0%,100%{opacity:.15}50%{opacity:1}}
-  </style>
-  <g clip-path="url(#r)">
-    <rect width="1200" height="90" fill="url(#b)"/>
-    <circle class="s" cx="120" cy="70" r="1.4"/>
-    <circle class="s" cx="380" cy="60" r="1.1" style="animation-delay:1s"/>
-    <circle class="s" cx="640" cy="75" r="1.5" style="animation-delay:2s"/>
-    <circle class="s" cx="900" cy="62" r="1.2" style="animation-delay:.5s"/>
-    <circle class="s" cx="1110" cy="72" r="1.4" style="animation-delay:1.5s"/>
-    <g class="w2" opacity=".55">
-      <path fill="url(#a)" d="M0 30 Q150 54 300 30 T600 30 T900 30 T1200 30 T1500 30 T1800 30 V0 H0Z"/>
-    </g>
-    <g class="w1" opacity=".9">
-      <path fill="url(#a)" d="M0 16 Q150 -6 300 16 T600 16 T900 16 T1200 16 T1500 16 T1800 16 V0 H0Z"/>
-    </g>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 90" width="1200" height="90" role="img" aria-label="everything that lives is designed to end.">
+<defs>
+  <pattern id="p-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="5" height="5" fill="#161616"/><rect width="2" height="5" fill="#F2F2F2"/></pattern>
+  <pattern id="p-dots" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="4" fill="#161616"/><rect x="1" y="1" width="2" height="2" fill="#BDBDBD"/></pattern>
+  <pattern id="p-cross" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="#161616"/><path d="M0 0L6 6M6 0L0 6" stroke="#8C8C8C" stroke-width="1.2"/></pattern>
+  <pattern id="scan" width="4" height="3" patternUnits="userSpaceOnUse"><rect width="4" height="1" fill="#fff" opacity=".045"/></pattern>  <linearGradient id="ls" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#BDBDBD"/></linearGradient></defs>
+<style>
+  .pt{fill:#fff;opacity:0;animation:pt 9s linear infinite}
+  @keyframes pt{0%{opacity:0;transform:translateY(0)}15%{opacity:.55}80%{opacity:.25}100%{opacity:0;transform:translateY(-40px)}}
+  .title{font:600 13px 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;letter-spacing:3.5px;fill:#F2F2F2}
+  .lbl{font:500 13.5px 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;fill:#8C8C8C}
+  .val{font:700 14px 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;fill:#F2F2F2}
+  .small{font:500 12px 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;fill:#8C8C8C}
+  .caps{font:600 10.5px 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;letter-spacing:2.5px;fill:#8C8C8C}
+  .in{animation:in .7s ease-out both}
+  @keyframes in{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
+  .g1,.g2{opacity:0;animation:gl 8s steps(1) infinite}
+  .g2{animation-delay:.08s}
+  @keyframes gl{0%,91%{opacity:0;transform:none}92%{opacity:1;transform:translateX(4px)}93%{opacity:1;transform:translateX(-3px)}94%{opacity:0;transform:none}96%{opacity:.8;transform:translateX(2px)}97%,100%{opacity:0}}
+  .base{animation:bf 8s steps(1) infinite}
+  @keyframes bf{0%,91%{opacity:1}92%,93%{opacity:.35}94%,100%{opacity:1}}
+.quote{font:300 19px 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;letter-spacing:3px;fill:#F2F2F2}
+  .q{animation:q 12s ease-in-out infinite}
+  @keyframes q{0%,72%{opacity:1}84%,90%{opacity:0}100%{opacity:1}}</style>
+
+<rect width="1200" height="90" fill="#0A0A0A"/>
+<rect class="pt" x="238.5" y="76.6" width="1.26" height="1.26" style="animation-delay:-6.51s;animation-duration:10.13s"/><rect class="pt" x="315.3" y="82.8" width="1.24" height="1.24" style="animation-delay:-6.28s;animation-duration:9.52s"/><rect class="pt" x="340.1" y="84.4" width="1.52" height="1.52" style="animation-delay:-5.78s;animation-duration:8.20s"/><rect class="pt" x="642.7" y="80.8" width="2.56" height="2.56" style="animation-delay:-7.86s;animation-duration:7.14s"/><rect class="pt" x="812.7" y="30.0" width="1.09" height="1.09" style="animation-delay:-1.84s;animation-duration:9.16s"/><rect class="pt" x="592.9" y="6.7" width="2.50" height="2.50" style="animation-delay:-1.77s;animation-duration:6.41s"/><rect class="pt" x="586.6" y="27.9" width="2.19" height="2.19" transform="rotate(45 586.6 27.9)" style="animation-delay:-4.98s;animation-duration:11.74s"/><rect class="pt" x="681.5" y="14.4" width="1.93" height="1.93" transform="rotate(45 681.5 14.4)" style="animation-delay:-4.83s;animation-duration:10.80s"/><rect class="pt" x="692.5" y="55.2" width="1.96" height="1.96" style="animation-delay:-4.47s;animation-duration:7.08s"/><rect class="pt" x="1115.6" y="53.7" width="2.15" height="2.15" style="animation-delay:-5.91s;animation-duration:11.90s"/><rect class="pt" x="1101.0" y="1.9" width="2.32" height="2.32" transform="rotate(45 1101.0 1.9)" style="animation-delay:-5.99s;animation-duration:9.84s"/><rect class="pt" x="1169.8" y="66.1" width="2.63" height="2.63" style="animation-delay:-2.09s;animation-duration:10.12s"/><rect class="pt" x="1148.6" y="11.0" width="2.69" height="2.69" style="animation-delay:-7.14s;animation-duration:8.08s"/><rect class="pt" x="922.9" y="29.0" width="2.29" height="2.29" style="animation-delay:-0.62s;animation-duration:9.50s"/><rect class="pt" x="668.2" y="28.8" width="1.96" height="1.96" transform="rotate(45 668.2 28.8)" style="animation-delay:-4.39s;animation-duration:7.12s"/><rect class="pt" x="983.3" y="62.3" width="2.03" height="2.03" style="animation-delay:-7.57s;animation-duration:6.21s"/><rect class="pt" x="258.0" y="53.6" width="2.23" height="2.23" transform="rotate(45 258.0 53.6)" style="animation-delay:-2.36s;animation-duration:11.37s"/><rect class="pt" x="771.0" y="0.2" width="1.83" height="1.83" transform="rotate(45 771.0 0.2)" style="animation-delay:-1.73s;animation-duration:6.67s"/><rect class="pt" x="211.9" y="17.2" width="1.52" height="1.52" style="animation-delay:-1.32s;animation-duration:11.13s"/><rect class="pt" x="827.7" y="74.9" width="1.68" height="1.68" style="animation-delay:-4.78s;animation-duration:11.72s"/><rect class="pt" x="993.7" y="43.4" width="1.46" height="1.46" style="animation-delay:-8.48s;animation-duration:6.50s"/><rect class="pt" x="431.0" y="31.1" width="2.62" height="2.62" style="animation-delay:-3.77s;animation-duration:10.91s"/><rect class="pt" x="885.6" y="49.7" width="2.49" height="2.49" transform="rotate(45 885.6 49.7)" style="animation-delay:-0.05s;animation-duration:11.66s"/><rect class="pt" x="1051.9" y="82.4" width="2.49" height="2.49" style="animation-delay:-7.01s;animation-duration:11.22s"/><rect class="pt" x="428.2" y="41.8" width="2.46" height="2.46" transform="rotate(45 428.2 41.8)" style="animation-delay:-3.58s;animation-duration:9.37s"/><rect class="pt" x="626.3" y="80.1" width="1.07" height="1.07" style="animation-delay:-1.04s;animation-duration:10.33s"/>
+<line x1="0" x2="1200" y1="14" y2="14" stroke="#3A3A3A"/><line x1="0" x2="0" y1="14" y2="22" stroke="#8C8C8C"/><line x1="40" x2="40" y1="14" y2="18" stroke="#3A3A3A"/><line x1="80" x2="80" y1="14" y2="18" stroke="#3A3A3A"/><line x1="120" x2="120" y1="14" y2="18" stroke="#3A3A3A"/><line x1="160" x2="160" y1="14" y2="18" stroke="#3A3A3A"/><line x1="200" x2="200" y1="14" y2="22" stroke="#8C8C8C"/><line x1="240" x2="240" y1="14" y2="18" stroke="#3A3A3A"/><line x1="280" x2="280" y1="14" y2="18" stroke="#3A3A3A"/><line x1="320" x2="320" y1="14" y2="18" stroke="#3A3A3A"/><line x1="360" x2="360" y1="14" y2="18" stroke="#3A3A3A"/><line x1="400" x2="400" y1="14" y2="22" stroke="#8C8C8C"/><line x1="440" x2="440" y1="14" y2="18" stroke="#3A3A3A"/><line x1="480" x2="480" y1="14" y2="18" stroke="#3A3A3A"/><line x1="520" x2="520" y1="14" y2="18" stroke="#3A3A3A"/><line x1="560" x2="560" y1="14" y2="18" stroke="#3A3A3A"/><line x1="600" x2="600" y1="14" y2="22" stroke="#8C8C8C"/><line x1="640" x2="640" y1="14" y2="18" stroke="#3A3A3A"/><line x1="680" x2="680" y1="14" y2="18" stroke="#3A3A3A"/><line x1="720" x2="720" y1="14" y2="18" stroke="#3A3A3A"/><line x1="760" x2="760" y1="14" y2="18" stroke="#3A3A3A"/><line x1="800" x2="800" y1="14" y2="22" stroke="#8C8C8C"/><line x1="840" x2="840" y1="14" y2="18" stroke="#3A3A3A"/><line x1="880" x2="880" y1="14" y2="18" stroke="#3A3A3A"/><line x1="920" x2="920" y1="14" y2="18" stroke="#3A3A3A"/><line x1="960" x2="960" y1="14" y2="18" stroke="#3A3A3A"/><line x1="1000" x2="1000" y1="14" y2="22" stroke="#8C8C8C"/><line x1="1040" x2="1040" y1="14" y2="18" stroke="#3A3A3A"/><line x1="1080" x2="1080" y1="14" y2="18" stroke="#3A3A3A"/><line x1="1120" x2="1120" y1="14" y2="18" stroke="#3A3A3A"/><line x1="1160" x2="1160" y1="14" y2="18" stroke="#3A3A3A"/><line x1="1200" x2="1200" y1="14" y2="22" stroke="#8C8C8C"/>
+<g class="q">
+  <path d="M380 47L383 50L380 53L377 50Z" fill="#8C8C8C"/><path d="M842 47L845 50L842 53L839 50Z" fill="#8C8C8C"/>
+  <clipPath id="qa"><rect x="0" y="42" width="2000" height="5"/></clipPath>
+<clipPath id="qb"><rect x="0" y="50" width="2000" height="4"/></clipPath>
+<text class="quote base" x="600" y="56" text-anchor="middle">everything that lives is designed to end.</text>
+<text class="quote g1" x="600" y="56" clip-path="url(#qa)" text-anchor="middle">everything that lives is designed to end.</text>
+<text class="quote g2" x="600" y="56" clip-path="url(#qb)" text-anchor="middle">everything that lives is designed to end.</text>
+</g>
+<rect width="1200" height="90" fill="url(#scan)"/>
+<rect x="0.5" y="0.5" width="1199" height="89" fill="none" stroke="#3A3A3A"/>
+<path d="M0.5 16.5V0.5H16.5M1183.5 0.5H1199.5V16.5M1199.5 73.5V89.5H1183.5M16.5 89.5H0.5V73.5" fill="none" stroke="#F2F2F2" stroke-width="1.5"/>
 </svg>

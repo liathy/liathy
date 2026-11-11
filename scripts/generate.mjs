@@ -1,14 +1,16 @@
 // Draws the profile cards (stats, languages, activity, tech stack, featured project)
-// as animated night-sky SVGs in dist/. The Last.fm card is drawn live by worker/.
+// as animated YoRHa-monochrome SVGs in dist/. The Last.fm card is drawn live by worker/.
 // Runs in GitHub Actions; needs only Node 20+ (no dependencies).
 import { mkdir, writeFile } from 'node:fs/promises';
-import { C, PALETTE, FONT, esc, trunc, num, sparkle, BASE_STYLE, card } from './theme.mjs';
+import { C, FILLS, FONT, esc, trunc, num, diamond, frame, particles, BASE_STYLE, card } from './theme.mjs';
 
 const GH_USER = process.env.GH_USER || 'liathy';
 const FEATURED = process.env.FEATURED_REPO || 'MusiKPL';
 const TOKEN = process.env.GITHUB_TOKEN;
 const STACK = (process.env.STACK || 'rust,js,ts,angular,tailwind,flutter').split(',');
 const STACK_LABELS = { rust: 'Rust', js: 'JavaScript', ts: 'TypeScript', angular: 'Angular', tailwind: 'Tailwind', flutter: 'Flutter' };
+// simpleicons.org slugs: single-colour logos we can paint white
+const STACK_ICONS = { rust: 'rust', js: 'javascript', ts: 'typescript', angular: 'angular', tailwind: 'tailwindcss', flutter: 'flutter' };
 const OUT = 'dist';
 
 async function getJSON(url, opts = {}) {
@@ -20,7 +22,7 @@ async function getJSON(url, opts = {}) {
 async function dataURI(url) {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`${res.status} for image`);
-  const type = res.headers.get('content-type') || 'image/png';
+  const type = (res.headers.get('content-type') || 'image/png').split(';')[0];
   return `data:${type};base64,${Buffer.from(await res.arrayBuffer()).toString('base64')}`;
 }
 
@@ -60,30 +62,42 @@ function statsCard(u, days) {
   const stars_ = u.repositories.nodes.reduce((s, r) => s + r.stargazerCount, 0);
   const { current, longest } = streaks(days);
   const rows = [
-    ['★', 'stars earned', stars_],
-    ['✎', 'commits (past year)', cc.totalCommitContributions + cc.restrictedContributionsCount],
-    ['⇄', 'pull requests', u.pullRequests.totalCount],
-    ['◎', 'issues', u.issues.totalCount],
-    ['☄', 'contributions (past year)', cc.contributionCalendar.totalContributions],
+    ['stars earned', stars_],
+    ['commits (past year)', cc.totalCommitContributions + cc.restrictedContributionsCount],
+    ['pull requests', u.pullRequests.totalCount],
+    ['issues', u.issues.totalCount],
+    ['contributions (past year)', cc.contributionCalendar.totalContributions],
   ];
-  const body = rows.map(([icon, l, v], i) => `
+  const body = rows.map(([l, v], i) => {
+    const y = 80 + i * 23;
+    return `
   <g class="in" style="animation-delay:${0.15 * i}s">
-    <text x="27" y="${74 + i * 25}" style="font:700 14px ${FONT};fill:${PALETTE[i]}">${icon}</text>
-    <text class="lbl" x="48" y="${74 + i * 25}">${esc(l)}</text>
-    <text class="val" x="290" y="${74 + i * 25}" text-anchor="end">${num(v)}</text>
-  </g>`).join('');
+    ${diamond(31, y - 4.5, 3, i === 0 ? C.text : C.muted)}
+    <text class="lbl" x="44" y="${y}">${esc(l)}</text>
+    <line x1="${50 + l.length * 6.9}" x2="${262 - String(num(v)).length * 8.5}" y1="${y - 4}" y2="${y - 4}" stroke="${C.border}" stroke-dasharray="1 4"/>
+    <text class="val" x="290" y="${y}" text-anchor="end">${num(v)}</text>
+  </g>`;
+  }).join('');
   const pct = Math.max(4, Math.min(100, longest ? (current / longest) * 100 : 0));
+  // gauge with tick marks, like the hacking/HUD readouts
+  let ticks = '';
+  for (let k = 0; k < 40; k++) {
+    const a = (k / 40) * Math.PI * 2, r1 = k % 5 ? 56 : 53, r2 = 59;
+    ticks += `<line x1="${(395 + Math.sin(a) * r1).toFixed(1)}" y1="${(118 - Math.cos(a) * r1).toFixed(1)}" x2="${(395 + Math.sin(a) * r2).toFixed(1)}" y2="${(118 - Math.cos(a) * r2).toFixed(1)}" stroke="${k % 5 ? C.border : C.muted}"/>`;
+  }
   const ring = `
-  <circle cx="395" cy="104" r="46" fill="none" stroke="${C.border}" stroke-width="9"/>
-  <circle class="ring" cx="395" cy="104" r="46" fill="none" stroke="url(#ls)" stroke-width="9" stroke-linecap="round"
-    pathLength="100" stroke-dasharray="${pct.toFixed(1)} 100" transform="rotate(-90 395 104)"/>
-  <text x="395" y="110" text-anchor="middle" style="font:800 26px ${FONT};fill:${C.text}">${current}</text>
-  <text class="small" x="395" y="127" text-anchor="middle">day streak</text>
-  <text class="small" x="395" y="174" text-anchor="middle">longest: ${longest} ☾</text>
-  ${sparkle(450, 58, 6, C.sky, 0.4)}${sparkle(340, 150, 4.5, C.pink, 1.6)}`;
+  ${ticks}
+  <circle cx="395" cy="118" r="45" fill="none" stroke="${C.panel}" stroke-width="7"/>
+  <circle class="ring" cx="395" cy="118" r="45" fill="none" stroke="${C.text}" stroke-width="7"
+    pathLength="100" stroke-dasharray="${pct.toFixed(1)} 100" transform="rotate(-90 395 118)"/>
+  <g class="spin"><path d="M395 66 l3 -5 h-6z" fill="${C.text}"/></g>
+  <text x="395" y="124" text-anchor="middle" style="font:300 30px ${FONT};fill:${C.text}">${current}</text>
+  <text class="caps" x="395" y="142" text-anchor="middle" style="font-size:8.5px;letter-spacing:2px">STREAK</text>
+  <text class="small" x="395" y="190" text-anchor="middle">longest: ${longest}</text>`;
   return card({
-    w: 495, h: 195, title: '✧ stardust stats', seed: 11, label: `${GH_USER} GitHub stats`,
-    style: `.ring{animation:ring 1.6s ease-out both}@keyframes ring{from{stroke-dasharray:0 100}}`,
+    w: 495, h: 205, title: 'unit status', seed: 11, label: `${GH_USER} GitHub stats`,
+    style: `.ring{animation:ring 1.6s ease-out both}@keyframes ring{from{stroke-dasharray:0 100}}
+      .spin{transform-box:view-box;transform-origin:395px 118px;animation:spin 14s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}`,
     body: body + ring,
   });
 }
@@ -96,20 +110,20 @@ function languagesCard(u) {
   const top = Object.entries(totals).sort((a, b) => b[1] - a[1]).slice(0, 5);
   const barX = 150, barW = 255;
   const body = top.length ? top.map(([name, size], i) => {
-    const p = size / sum, y = 70 + i * 26;
+    const p = size / sum, y = 82 + i * 24;
     return `
   <g class="in" style="animation-delay:${0.12 * i}s">
-    <circle cx="31" cy="${y - 4.5}" r="5" fill="${PALETTE[i]}"/>
-    <text class="lbl" x="44" y="${y}" style="fill:${C.text}">${esc(trunc(name, 14))}</text>
-    <rect x="${barX}" y="${y - 10}" width="${barW}" height="10" rx="5" fill="${C.border}" opacity=".6"/>
-    <rect class="grow" x="${barX}" y="${y - 10}" width="${Math.max(10, p * barW).toFixed(1)}" height="10" rx="5" fill="${PALETTE[i]}" style="animation-delay:${0.12 * i + 0.2}s"/>
+    <rect x="26" y="${y - 10}" width="10" height="10" fill="${FILLS[i]}" stroke="${C.dim}" stroke-width=".8"/>
+    <text class="lbl" x="44" y="${y}" style="fill:${i ? C.soft : C.text}">${esc(trunc(name, 14))}</text>
+    <rect x="${barX}" y="${y - 9}" width="${barW}" height="8" fill="${C.panel}" stroke="${C.border}" stroke-width=".8"/>
+    <rect class="grow" x="${barX}" y="${y - 9}" width="${Math.max(6, p * barW).toFixed(1)}" height="8" fill="${FILLS[i]}" style="animation-delay:${0.12 * i + 0.2}s"/>
     <text class="small" x="470" y="${y}" text-anchor="end">${(p * 100).toFixed(1)}%</text>
   </g>`;
-  }).join('') : `<text class="lbl" x="25" y="90">no public code yet ☾</text>`;
+  }).join('') : `<text class="lbl" x="25" y="95">no public code yet</text>`;
   return card({
-    w: 495, h: 195, title: '✧ top languages', seed: 22, label: `${GH_USER} top languages`,
+    w: 495, h: 205, title: 'language analysis', seed: 22, label: `${GH_USER} top languages`,
     style: `.grow{transform-box:fill-box;transform-origin:left;animation:grow 1.3s cubic-bezier(.2,.8,.2,1) both}@keyframes grow{from{transform:scaleX(0)}}`,
-    body: body + sparkle(455, 32, 6, C.pink, 0.8),
+    body,
   });
 }
 
@@ -126,7 +140,7 @@ function smoothPath(pts) {
 
 function activityCard(days) {
   const last = days.slice(-31);
-  const w = 900, h = 270, x0 = 55, x1 = 870, y0 = 70, y1 = 220;
+  const w = 900, h = 280, x0 = 55, x1 = 870, y0 = 80, y1 = 230;
   const max = Math.max(4, ...last.map(d => d.contributionCount));
   const top = Math.ceil(max / 4) * 4;
   const X = i => x0 + (i * (x1 - x0)) / (last.length - 1);
@@ -138,25 +152,25 @@ function activityCard(days) {
   let grid = '';
   for (let k = 0; k <= 4; k++) {
     const v = (top / 4) * k, y = Y(v);
-    grid += `<line x1="${x0}" x2="${x1}" y1="${y}" y2="${y}" stroke="${C.border}" stroke-dasharray="3 6" opacity=".7"/>
+    grid += `<line x1="${x0}" x2="${x1}" y1="${y}" y2="${y}" stroke="${C.border}" stroke-dasharray="2 6"/>
     <text class="small" x="${x0 - 12}" y="${y + 4}" text-anchor="end">${v}</text>`;
   }
   const labels = last.map((d, i) => (i % 5 === 0 || i === last.length - 1)
-    ? `<text class="small" x="${X(i)}" y="${y1 + 24}" text-anchor="middle">${new Date(d.date + 'T00:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' }).toLowerCase()}</text>` : '').join('');
+    ? `<line x1="${X(i)}" x2="${X(i)}" y1="${y1}" y2="${y1 + 5}" stroke="${C.muted}"/><text class="small" x="${X(i)}" y="${y1 + 22}" text-anchor="middle">${new Date(d.date + 'T00:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' }).toLowerCase()}</text>` : '').join('');
   const dots = pts.map(([x, y], i) => last[i].contributionCount
-    ? `<circle class="dot" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.6" fill="${i % 2 ? C.sky : C.lilac}" style="animation-delay:${(1.2 + i * 0.03).toFixed(2)}s, ${(i * 0.17 % 3).toFixed(2)}s"/>` : '').join('');
+    ? `<rect class="dot" x="${(x - 3).toFixed(1)}" y="${(y - 3).toFixed(1)}" width="6" height="6" transform="rotate(45 ${x.toFixed(1)} ${y.toFixed(1)})" fill="${C.bg}" stroke="${C.text}" stroke-width="1.5" style="animation-delay:${(1.2 + i * 0.03).toFixed(2)}s, ${(i * 0.17 % 3).toFixed(2)}s"/>` : '').join('');
   return card({
-    w, h, title: '✧ moonlit activity · last 31 days', seed: 33, label: `${GH_USER} contribution graph`,
-    defs: `<linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C.lilac}" stop-opacity=".45"/><stop offset="1" stop-color="${C.sky}" stop-opacity="0"/></linearGradient>`,
+    w, h, title: 'activity log · last 31 days', seed: 33, label: `${GH_USER} contribution graph`,
+    defs: `<linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>`,
     style: `.draw{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 2.2s ease-out .2s forwards}@keyframes draw{to{stroke-dashoffset:0}}
       .area{animation:fade 1.5s ease-out 1s both}@keyframes fade{from{opacity:0}}
       .dot{opacity:0;animation:pop .4s ease-out forwards, glim 3s ease-in-out infinite}
       @keyframes pop{to{opacity:1}}@keyframes glim{50%{opacity:.45}}`,
     body: `
-  <text class="small" x="${x1}" y="38" text-anchor="end">${total} contributions ☾</text>
+  <text class="caps" x="${x1}" y="38" text-anchor="end">${total} CONTRIBUTIONS</text>
   ${grid}${labels}
   <path class="area" d="${area}" fill="url(#area)"/>
-  <path class="draw" d="${line}" pathLength="1" fill="none" stroke="url(#ls)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="draw" d="${line}" pathLength="1" fill="none" stroke="${C.text}" stroke-width="2" stroke-linejoin="round"/>
   ${dots}`,
   });
 }
@@ -178,50 +192,58 @@ function projectCard(repo) {
   const langs = repo.languages.edges, total = repo.languages.totalSize || 1;
   let x = 25;
   const seg = langs.map((e, i) => {
-    const wSeg = (e.size / total) * 445, s = `<rect x="${x.toFixed(1)}" y="128" width="${wSeg.toFixed(1)}" height="8" fill="${PALETTE[i]}"/>`;
+    const wSeg = (e.size / total) * 445, s = `<rect x="${x.toFixed(1)}" y="128" width="${wSeg.toFixed(1)}" height="8" fill="${FILLS[i]}"/>`;
     x += wSeg; return s;
   }).join('');
   let lx = 25;
   const legend = langs.slice(0, 3).map((e, i) => {
-    const s = `<circle cx="${lx + 4}" cy="157" r="4" fill="${PALETTE[i]}"/><text class="small" x="${lx + 13}" y="161">${esc(e.node.name)}</text>`;
-    lx += 22 + e.node.name.length * 7; return s;
+    const s = `<rect x="${lx}" y="152" width="9" height="9" fill="${FILLS[i]}" stroke="${C.dim}" stroke-width=".8"/><text class="small" x="${lx + 14}" y="161">${esc(e.node.name)}</text>`;
+    lx += 24 + e.node.name.length * 7; return s;
   }).join('');
   const tag = repo.latestRelease?.tagName;
+  const tx = 25 + repo.name.length * 13.5 + 14;
   return card({
     w: 495, h: 180, title: '', seed: 44, label: `${repo.name} project card`,
-    defs: `<clipPath id="bar"><rect x="25" y="128" width="445" height="8" rx="4"/></clipPath>`,
-    style: `.note{font:700 18px ${FONT};animation:note 5s ease-in-out infinite;opacity:0}
-      @keyframes note{0%{opacity:0;transform:translate(0,8px)}25%{opacity:1}100%{opacity:0;transform:translate(14px,-30px) rotate(14deg)}}
+    style: `.note{font:700 18px ${FONT};fill:${C.text};animation:note 5s ease-in-out infinite;opacity:0}
+      @keyframes note{0%{opacity:0;transform:translate(0,8px)}25%{opacity:.9}100%{opacity:0;transform:translate(14px,-30px)}}
       .bars{transform-box:fill-box;transform-origin:left;animation:grow 1.4s cubic-bezier(.2,.8,.2,1) .2s both}@keyframes grow{from{transform:scaleX(0)}}`,
     body: `
-  <text x="25" y="42" style="font:800 22px ${FONT};fill:url(#ls)">♪ ${esc(repo.name)}</text>
-  ${tag ? (tx => `<rect x="${tx}" y="25" width="${tag.length * 8 + 18}" height="22" rx="11" fill="${C.border}"/><text class="small" x="${tx + 9}" y="40" style="fill:${C.sky}">${esc(tag)}</text>`)(25 + (repo.name.length + 2) * 13.5 + 10) : ''}
-  <text class="note" x="420" y="50" style="fill:${C.lilac}">♪</text>
-  <text class="note" x="446" y="44" style="fill:${C.sky};animation-delay:1.7s">♫</text>
-  <text class="note" x="400" y="40" style="fill:${C.pink};animation-delay:3.3s">♪</text>
-  ${lines.map((l, i) => `<text class="lbl in" x="25" y="${76 + i * 18}" style="animation-delay:${0.1 * i}s">${esc(l)}</text>`).join('')}
-  <g clip-path="url(#bar)"><rect x="25" y="128" width="445" height="8" fill="${C.border}"/><g class="bars">${seg}</g></g>
+  <text class="caps" x="25" y="26" style="font-size:9.5px">◆ CURRENT MISSION</text>
+  <text x="25" y="52" style="font:300 24px ${FONT};letter-spacing:2px;fill:${C.text}">${esc(repo.name)}</text>
+  ${tag ? `<rect x="${tx}" y="35" width="${Math.ceil(tag.length * 6.6) + 14}" height="20" fill="none" stroke="${C.muted}"/><text class="small" x="${tx + 7}" y="49" textLength="${Math.ceil(tag.length * 6.6)}" style="fill:${C.text}">${esc(tag)}</text>` : ''}
+  <text class="note" x="420" y="52">♪</text>
+  <text class="note" x="446" y="46" style="animation-delay:1.7s;fill:${C.soft}">♫</text>
+  <text class="note" x="400" y="42" style="animation-delay:3.3s;fill:${C.muted}">♪</text>
+  ${lines.map((l, i) => `<text class="lbl in" x="25" y="${80 + i * 17}" style="animation-delay:${0.1 * i}s">${esc(l)}</text>`).join('')}
+  <rect x="25" y="128" width="445" height="8" fill="${C.panel}"/><g class="bars">${seg}</g>
+  <rect x="25" y="128" width="445" height="8" fill="none" stroke="${C.border}" stroke-width=".8"/>
   ${legend}
-  <text class="small" x="470" y="161" text-anchor="end"><tspan style="fill:${C.lilac}">★</tspan> ${repo.stargazerCount}   <tspan style="fill:${C.sky}">⑂</tspan> ${repo.forkCount}</text>`,
+  <text class="small" x="470" y="161" text-anchor="end"><tspan style="fill:${C.text}">★</tspan> ${repo.stargazerCount}   <tspan style="fill:${C.text}">⑂</tspan> ${repo.forkCount}</text>`,
   });
 }
 
 // ---------- tech stack ----------
 async function techCard() {
-  const size = 58, gap = 46, w = STACK.length * size + (STACK.length - 1) * gap + 60, h = 112;
-  const icons = await Promise.all(STACK.map(id => dataURI(`https://skillicons.dev/icons?i=${encodeURIComponent(id)}`).catch(() => null)));
+  const size = 64, gap = 40, w = STACK.length * size + (STACK.length - 1) * gap + 40, h = 124;
+  const icons = await Promise.all(STACK.map(id =>
+    dataURI(`https://cdn.simpleicons.org/${STACK_ICONS[id] || id}/F2F2F2`).catch(() => null)));
   const items = STACK.map((id, i) => {
-    const x = 30 + i * (size + gap);
-    const img = icons[i]
-      ? `<image href="${icons[i]}" x="${x}" y="12" width="${size}" height="${size}"/>`
-      : `<rect x="${x}" y="12" width="${size}" height="${size}" rx="14" fill="${C.bg2}"/><text x="${x + size / 2}" y="47" text-anchor="middle" class="lbl">${esc(id)}</text>`;
-    return `<g class="bob" style="animation-delay:${(i * 0.3).toFixed(1)}s">${img}
-      <text x="${x + size / 2}" y="96" text-anchor="middle" style="font:600 12.5px ${FONT};fill:${PALETTE[i % PALETTE.length]}">${esc(STACK_LABELS[id] || id)}</text></g>`;
+    const x = 20 + i * (size + gap);
+    const inner = icons[i]
+      ? `<image href="${icons[i]}" x="${x + 16}" y="${22}" width="${size - 32}" height="${size - 32}"/>`
+      : `<text x="${x + size / 2}" y="${44}" text-anchor="middle" class="lbl" style="fill:${C.text}">${esc(id)}</text>`;
+    return `<g class="bob" style="animation-delay:${(i * 0.3).toFixed(1)}s">
+      <rect x="${x}" y="6" width="${size}" height="${size}" fill="${C.bg}"/>
+      ${frame(size, size, { x, y: 6, tick: 9 })}${inner}
+      <text class="caps" x="${x + size / 2}" y="98" text-anchor="middle" style="letter-spacing:1.8px">${esc((STACK_LABELS[id] || id).toUpperCase())}</text></g>`;
   }).join('');
-  const spk = STACK.slice(1).map((_, i) => sparkle(30 + (i + 1) * (size + gap) - gap / 2, 40 + (i % 2) * 14, 4, i % 2 ? C.sky : C.lilac, i * 0.5)).join('');
+  const links = STACK.slice(1).map((_, i) => {
+    const x = 20 + (i + 1) * (size + gap) - gap;
+    return `<line x1="${x + 6}" x2="${x + gap - 6}" y1="38" y2="38" stroke="${C.border}" stroke-dasharray="2 4"/>${diamond(x + gap / 2, 38, 2.5, C.muted)}`;
+  }).join('');
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" role="img" aria-label="tech stack: ${esc(STACK.map(s => STACK_LABELS[s] || s).join(', '))}">
-<style>${BASE_STYLE}.bob{animation:bob 3s ease-in-out infinite}@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}</style>
-${items}${spk}
+<style>${BASE_STYLE}.bob{animation:bob 3.4s ease-in-out infinite}@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}</style>
+${particles(w, h, 14, 66)}${links}${items}
 </svg>
 `;
 }

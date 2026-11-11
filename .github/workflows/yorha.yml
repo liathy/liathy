@@ -1,8 +1,8 @@
-name: night sky
+name: yorha
 
 on:
   schedule:
-    - cron: "*/30 * * * *" # redraw now playing + stats every 30 min
+    - cron: "*/30 * * * *" # redraw stats every 30 min
   workflow_dispatch:
   push:
     branches: [main]
@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: night-sky
+  group: yorha
   cancel-in-progress: true
 
 jobs:
@@ -35,14 +35,14 @@ jobs:
         with:
           github_user_name: ${{ github.repository_owner }}
           outputs: |
-            dist/snake-dark.svg?color_snake=#9ED2F6&color_dots=#221c42,#3f3470,#6c58a8,#a98bdc,#dcc9f7
-            dist/snake-light.svg?color_snake=#6FB6E8&color_dots=#efeaf8,#dccff0,#c3abe6,#a587d6,#8466c4
+            dist/snake-dark.svg?color_snake=#F2F2F2&color_dots=#161616,#3A3A3A,#6A6A6A,#A6A6A6,#E6E6E6
+            dist/snake-light.svg?color_snake=#0A0A0A&color_dots=#EDEDED,#C4C4C4,#8C8C8C,#555555,#1A1A1A
 
       - name: publish to the output branch
         uses: crazy-max/ghaction-github-pages@v4
         with:
           target_branch: output
           build_dir: dist
-          commit_message: "chore: redraw the night sky ✧"
+          commit_message: "chore: redraw unit data ◆"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
