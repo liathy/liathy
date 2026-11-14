@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 495 205" width="495" height="205" role="img" aria-label="liathy top languages">
+<defs>
+  <pattern id="p-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="5" height="5" fill="#161616"/><rect width="2" height="5" fill="#F2F2F2"/></pattern>
+  <pattern id="p-dots" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="4" fill="#161616"/><rect x="1" y="1" width="2" height="2" fill="#BDBDBD"/></pattern>
+  <pattern id="p-cross" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="#161616"/><path d="M0 0L6 6M6 0L0 6" stroke="#8C8C8C" stroke-width="1.2"/></pattern>
+  <pattern id="scan" width="4" height="3" patternUnits="userSpaceOnUse"><rect width="4" height="1" fill="#fff" opacity=".045"/></pattern>  <linearGradient id="ls" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#BDBDBD"/></linearGradient>
+  <clipPath id="cardclip"><rect width="495" height="205"/></clipPath>
+  
+</defs>
+<style>
+  .pt{fill:#fff;opacity:0;animation:pt 9s linear infinite}
+  @keyframes pt{0%{opacity:0;transform:translateY(0)}15%{opacity:.55}80%{opacity:.25}100%{opacity:0;transform:translateY(-40px)}}
+  .title{font:600 13px 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;letter-spacing:3.5px;fill:#F2F2F2}
+  .lbl{font:500 13.5px 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;fill:#8C8C8C}
+  .val{font:700 14px 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;fill:#F2F2F2}
+  .small{font:500 12px 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;fill:#8C8C8C}
+  .caps{font:600 10.5px 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;letter-spacing:2.5px;fill:#8C8C8C}
+  .in{animation:in .7s ease-out both}
+  @keyframes in{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
+  .g1,.g2{opacity:0;animation:gl 8s steps(1) infinite}
+  .g2{animation-delay:.08s}
+  @keyframes gl{0%,91%{opacity:0;transform:none}92%{opacity:1;transform:translateX(4px)}93%{opacity:1;transform:translateX(-3px)}94%{opacity:0;transform:none}96%{opacity:.8;transform:translateX(2px)}97%,100%{opacity:0}}
+  .base{animation:bf 8s steps(1) infinite}
+  @keyframes bf{0%,91%{opacity:1}92%,93%{opacity:.35}94%,100%{opacity:1}}
+.grow{transform-box:fill-box;transform-origin:left;animation:grow 1.3s cubic-bezier(.2,.8,.2,1) both}@keyframes grow{from{transform:scaleX(0)}}</style>
+<g clip-path="url(#cardclip)">
+  <rect width="495" height="205" fill="#0A0A0A"/>
+  <rect class="pt" x="307.8" y="48.5" width="1.41" height="1.41" transform="rotate(45 307.8 48.5)" style="animation-delay:-3.28s;animation-duration:11.38s"/><rect class="pt" x="220.5" y="138.0" width="2.34" height="2.34" transform="rotate(45 220.5 138.0)" style="animation-delay:-0.97s;animation-duration:6.81s"/><rect class="pt" x="90.5" y="102.1" width="1.28" height="1.28" style="animation-delay:-2.02s;animation-duration:9.37s"/><rect class="pt" x="386.8" y="136.5" width="2.39" height="2.39" transform="rotate(45 386.8 136.5)" style="animation-delay:-5.97s;animation-duration:8.53s"/><rect class="pt" x="2.3" y="9.8" width="2.13" height="2.13" style="animation-delay:-1.54s;animation-duration:7.58s"/><rect class="pt" x="404.1" y="22.6" width="1.53" height="1.53" transform="rotate(45 404.1 22.6)" style="animation-delay:-2.64s;animation-duration:7.77s"/><rect class="pt" x="63.3" y="66.3" width="1.68" height="1.68" transform="rotate(45 63.3 66.3)" style="animation-delay:-0.03s;animation-duration:8.59s"/><rect class="pt" x="26.6" y="163.3" width="2.12" height="2.12" transform="rotate(45 26.6 163.3)" style="animation-delay:-1.07s;animation-duration:9.16s"/><rect class="pt" x="129.2" y="169.4" width="1.36" height="1.36" style="animation-delay:-6.03s;animation-duration:8.73s"/><rect class="pt" x="444.2" y="86.0" width="1.35" height="1.35" transform="rotate(45 444.2 86.0)" style="animation-delay:-3.86s;animation-duration:10.33s"/><rect class="pt" x="259.4" y="124.0" width="2.58" height="2.58" transform="rotate(45 259.4 124.0)" style="animation-delay:-3.16s;animation-duration:10.54s"/><rect class="pt" x="54.5" y="10.2" width="1.62" height="1.62" style="animation-delay:-4.31s;animation-duration:11.27s"/><rect class="pt" x="197.7" y="25.0" width="1.02" height="1.02" style="animation-delay:-5.04s;animation-duration:8.18s"/><rect class="pt" x="195.1" y="60.7" width="1.25" height="1.25" style="animation-delay:-1.59s;animation-duration:8.93s"/><rect class="pt" x="71.5" y="195.8" width="1.66" height="1.66" style="animation-delay:-8.05s;animation-duration:7.86s"/><rect class="pt" x="350.0" y="83.1" width="2.00" height="2.00" transform="rotate(45 350.0 83.1)" style="animation-delay:-8.19s;animation-duration:8.57s"/><rect class="pt" x="492.1" y="109.6" width="1.66" height="1.66" style="animation-delay:-0.78s;animation-duration:9.25s"/><rect class="pt" x="19.5" y="122.5" width="1.45" height="1.45" style="animation-delay:-5.08s;animation-duration:10.68s"/><rect class="pt" x="245.3" y="95.2" width="1.40" height="1.40" transform="rotate(45 245.3 95.2)" style="animation-delay:-4.10s;animation-duration:7.60s"/><rect class="pt" x="298.5" y="87.8" width="2.61" height="2.61" style="animation-delay:-6.64s;animation-duration:9.87s"/>
+</g>
+<path d="M29 28.5L33.5 33L29 37.5L24.5 33Z" fill="#F2F2F2"/>
+<clipPath id="ta"><rect x="0" y="24" width="2000" height="5"/></clipPath>
+<clipPath id="tb"><rect x="0" y="32" width="2000" height="4"/></clipPath>
+<text class="title base" x="42" y="38">LANGUAGE ANALYSIS</text>
+<text class="title g1" x="42" y="38" clip-path="url(#ta)">LANGUAGE ANALYSIS</text>
+<text class="title g2" x="42" y="38" clip-path="url(#tb)">LANGUAGE ANALYSIS</text>
+<line x1="25" y1="52" x2="470" y2="52" stroke="#3A3A3A"/>
+<rect x="466" y="50" width="4" height="4" fill="#F2F2F2"/>
+
+  <g class="in" style="animation-delay:0s">
+    <rect x="26" y="72" width="10" height="10" fill="#F2F2F2" stroke="#5A5A5A" stroke-width=".8"/>
+    <text class="lbl" x="44" y="82" style="fill:#F2F2F2">Rust</text>
+    <rect x="150" y="73" width="255" height="8" fill="#161616" stroke="#3A3A3A" stroke-width=".8"/>
+    <rect class="grow" x="150" y="73" width="213.0" height="8" fill="#F2F2F2" style="animation-delay:0.2s"/>
+    <text class="small" x="470" y="82" text-anchor="end">83.5%</text>
+  </g>
+  <g class="in" style="animation-delay:0.12s">
+    <rect x="26" y="96" width="10" height="10" fill="url(#p-hatch)" stroke="#5A5A5A" stroke-width=".8"/>
+    <text class="lbl" x="44" y="106" style="fill:#BDBDBD">Kotlin</text>
+    <rect x="150" y="97" width="255" height="8" fill="#161616" stroke="#3A3A3A" stroke-width=".8"/>
+    <rect class="grow" x="150" y="97" width="32.1" height="8" fill="url(#p-hatch)" style="animation-delay:0.32s"/>
+    <text class="small" x="470" y="106" text-anchor="end">12.6%</text>
+  </g>
+  <g class="in" style="animation-delay:0.24s">
+    <rect x="26" y="120" width="10" height="10" fill="#8C8C8C" stroke="#5A5A5A" stroke-width=".8"/>
+    <text class="lbl" x="44" y="130" style="fill:#BDBDBD">JavaScript</text>
+    <rect x="150" y="121" width="255" height="8" fill="#161616" stroke="#3A3A3A" stroke-width=".8"/>
+    <rect class="grow" x="150" y="121" width="7.9" height="8" fill="#8C8C8C" style="animation-delay:0.44s"/>
+    <text class="small" x="470" y="130" text-anchor="end">3.1%</text>
+  </g>
+  <g class="in" style="animation-delay:0.36s">
+    <rect x="26" y="144" width="10" height="10" fill="url(#p-dots)" stroke="#5A5A5A" stroke-width=".8"/>
+    <text class="lbl" x="44" y="154" style="fill:#BDBDBD">PowerShell</text>
+    <rect x="150" y="145" width="255" height="8" fill="#161616" stroke="#3A3A3A" stroke-width=".8"/>
+    <rect class="grow" x="150" y="145" width="6.0" height="8" fill="url(#p-dots)" style="animation-delay:0.56s"/>
+    <text class="small" x="470" y="154" text-anchor="end">0.8%</text>
+  </g>
+<g clip-path="url(#cardclip)" pointer-events="none"><rect width="495" height="205" fill="url(#scan)"/></g>
+<rect x="0.5" y="0.5" width="494" height="204" fill="none" stroke="#3A3A3A"/>
+<path d="M0.5 12.5V0.5H12.5M482.5 0.5H494.5V12.5M494.5 192.5V204.5H482.5M12.5 204.5H0.5V192.5" fill="none" stroke="#F2F2F2" stroke-width="1.5"/>
+</svg>
